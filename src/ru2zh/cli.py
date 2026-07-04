@@ -216,7 +216,19 @@ def main(argv: list[str] | None = None) -> int:
     failed = 0
     t0 = time.time()
 
-    print(f"共找到 {total} 个音频文件，翻译引擎：{cfg.engine}，输出目录：{out_dir}")
+    # 提前解析计算设备：一方面让用户开跑前就看到用的是 GPU 还是 CPU，
+    # 另一方面在"要求 GPU 但检测不到"时立即以清晰中文报错，而不是逐个文件才失败。
+    try:
+        device, compute_type = runtime.resolve_device(cfg)
+    except RuntimeError as e:
+        print(f"[错误] {e}", file=sys.stderr)
+        return 2
+
+    device_label = "GPU（cuda）" if device == "cuda" else "CPU"
+    print(
+        f"共找到 {total} 个音频文件 ｜ 计算设备：{device_label}，精度 {compute_type} ｜ "
+        f"翻译引擎：{cfg.engine} ｜ 输出目录：{out_dir}"
+    )
 
     for idx, audio in enumerate(files, start=1):
         print(f"\n[{idx}/{total}] 处理：{audio}")
