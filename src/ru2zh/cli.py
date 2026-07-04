@@ -36,6 +36,17 @@ def _build_parser() -> argparse.ArgumentParser:
         prog="ru2zh",
         description="俄语语音转写 + 俄译中：把俄语音频转写为文字并翻译成中文，"
         "输出 txt / srt / json。",
+        epilog=(
+            "示例（Windows 上可用 transcribe.bat 代替 python -m ru2zh.cli）：\n"
+            "  transcribe.bat 录音.mp3\n"
+            "  transcribe.bat D:\\录音文件夹 --recursive\n"
+            "  transcribe.bat 录音.mp3 --engine claude\n"
+            "  transcribe.bat 录音.mp3 --formats txt,srt_bilingual\n"
+            "  transcribe.bat 录音.mp3 --cpu\n"
+            "也可直接把音频文件或文件夹拖到 transcribe.bat 图标上运行；\n"
+            "输出文件默认保存在 output 目录。"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "inputs",
