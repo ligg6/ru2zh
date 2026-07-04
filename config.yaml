@@ -1,0 +1,60 @@
+# ru2zh 配置文件
+# 所有键与 AppConfig 保持一致。可用环境变量 RU2ZH_<键大写> 覆盖（优先级最高）。
+# 值写 null 表示保持为空（None）。
+
+# ============ ASR（语音识别）============
+
+# Whisper 模型：可填尺寸别名（如 large-v3 / small）或本地模型目录路径。
+whisper_model: large-v3
+
+# 计算设备：auto（自动检测）| cuda（GPU）| cpu
+device: auto
+
+# 计算精度：auto（自动）| float16 | int8_float16 | int8
+# auto 在 GPU 上统一用 int8_float16（省显存且与 float16 精度几乎无差别），CPU 上用 int8。
+compute_type: auto
+
+# 解码 beam 大小（越大越准但越慢）。
+beam_size: 5
+
+# VAD 最短静音时长（毫秒），用于分段。
+vad_min_silence_ms: 500
+
+# 初始提示词（可为专业术语提供上下文），留空写 null。
+initial_prompt: null
+
+# 是否强制要求 GPU：null=自动（Windows 上为 true，其他平台为 false）；true=无 GPU 则报错；false=允许 CPU。
+require_gpu: null
+
+# ============ 翻译 ============
+
+# 翻译引擎：nllb（本地模型）| claude | openai | deepseek（后三者走 API）。
+engine: nllb
+
+# 本地 NLLB（ctranslate2）模型目录。
+nllb_model_dir: models/nllb-200-distilled-1.3B-ct2
+
+# API 模型名：null 表示使用该引擎的默认模型。
+api_model: null
+
+# 自定义 OpenAI 兼容端点 URL，留空写 null。
+api_base_url: null
+
+# API 密钥：一般留空（null），改从环境变量读取（ANTHROPIC_API_KEY / OPENAI_API_KEY / DEEPSEEK_API_KEY）。
+api_key: null
+
+# ============ 通用 ============
+
+# 模型总目录。
+models_dir: models
+
+# HuggingFace 端点：留空写 null；国内可填 https://hf-mirror.com。
+hf_endpoint: null
+
+# 输出格式：txt | srt_ru | srt_zh | srt_bilingual | json
+output_formats:
+  - txt
+  - srt_ru
+  - srt_zh
+  - srt_bilingual
+  - json

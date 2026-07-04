@@ -1,0 +1,12 @@
+.venv/
+models/
+output/
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/data/*.wav
+tests/data/*.mp3
+# 保留仓库自带的两个小测试样本（慢测试依赖它们）
+!tests/data/ru_short.mp3
+!tests/data/ru_sample.mp3
+dist/

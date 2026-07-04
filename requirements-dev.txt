@@ -1,0 +1,4 @@
+# 开发/测试依赖
+pytest>=8.0
+gTTS>=2.5          # 生成俄语测试音频（仅开发机用）
+gradio_client>=1.0 # Web UI 冒烟测试

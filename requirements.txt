@@ -1,0 +1,10 @@
+# ru2zh 运行依赖（所有平台通用）
+faster-whisper==1.2.1
+ctranslate2>=4.5,<5
+huggingface_hub>=0.25
+transformers>=4.46          # 仅用其 AutoTokenizer（NLLB 分词），不需要 torch
+sentencepiece>=0.2.0
+gradio>=6.19,<7
+anthropic>=0.60
+openai>=1.60
+pyyaml>=6.0

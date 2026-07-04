@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ru2zh"
+version = "0.1.0"
+description = "俄语语音转写 + 俄译中软件"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+# src 布局：包代码位于 src/ 目录下
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "slow: 需要模型和音频的端到端测试",
+]
+# 默认跳过 slow 标记；显式跑用 -m slow
+addopts = "-m 'not slow'"

@@ -1,0 +1,4 @@
+# 仅 Windows GPU 环境需要：CUDA 12 的 cuBLAS 与 cuDNN 9 运行库（pip 轮子方式，免装 CUDA Toolkit）
+# 注意：nvidia-cudnn-cu12 轮子约 700MB，下载较慢属正常
+nvidia-cublas-cu12
+nvidia-cudnn-cu12==9.*
