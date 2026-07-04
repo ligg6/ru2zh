@@ -14,6 +14,7 @@ from __future__ import annotations
 import dataclasses
 import os
 import time
+import traceback
 from pathlib import Path
 
 import gradio as gr
@@ -113,6 +114,17 @@ def build_app(cfg: AppConfig) -> gr.Blocks:
             result = transcribe_and_translate(str(audio_path), run_cfg, progress_cb)
         except (RuntimeError, ValueError, FileNotFoundError) as e:
             return "❌ " + str(e), [], None
+        except Exception as e:  # noqa: BLE001 兜底：绝不让异常炸掉界面
+            # 未预期异常（如 GPU/cuDNN 错误、音频解码异常等）：
+            # 状态区给可读中文提示，完整堆栈打到控制台便于诊断。
+            traceback.print_exc()
+            return (
+                f"❌ 处理失败：{type(e).__name__}: {e}\n\n"
+                "完整错误堆栈已打印到运行 start_webui.bat 的黑色命令行窗口，"
+                "如需帮助可把该窗口的报错内容截图发来。",
+                [],
+                None,
+            )
 
         # 未检测到语音：明确提示，清空表格与文件
         if not result.segments:
