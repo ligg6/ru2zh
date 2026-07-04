@@ -246,9 +246,31 @@ def build_app(cfg: AppConfig) -> gr.Blocks:
     return app
 
 
+def _bypass_proxy_for_localhost() -> None:
+    """把本机地址加入 NO_PROXY，避免 Gradio 启动自检被系统代理拦截。
+
+    Gradio 的 launch() 在服务起来后会用 httpx GET 一次 http://127.0.0.1:<port>
+    做健康自检。若系统设置了 HTTP(S)_PROXY（常见于 VPN / 代理软件），这次对本机
+    的请求会被错误地路由到代理，进而被远程强制断开（Windows 上表现为
+    WinError 10054 / httpx.ReadError），导致界面启动失败。把 localhost 相关地址
+    加入 NO_PROXY，让 httpx 对本机直连、绕开代理即可；不影响代理对正常上网的作用。
+    同时写大小写两种变量名，兼容不同库的读取习惯。
+    """
+    hosts = ("127.0.0.1", "localhost", "::1")
+    for var in ("NO_PROXY", "no_proxy"):
+        parts = [p.strip() for p in os.environ.get(var, "").split(",") if p.strip()]
+        for h in hosts:
+            if h not in parts:
+                parts.append(h)
+        os.environ[var] = ",".join(parts)
+
+
 def main() -> None:
     """加载配置、构建界面并启动本地服务（自动打开浏览器）。"""
     cfg = load_config()
+
+    # 让本机地址绕过系统代理，避免 Gradio 启动自检被 VPN/代理拦截而崩溃
+    _bypass_proxy_for_localhost()
 
     # 必须在任何 huggingface_hub / 模型加载之前设置 HF 端点
     from . import runtime
